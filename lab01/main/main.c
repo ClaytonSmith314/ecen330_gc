@@ -78,18 +78,18 @@ static const char *TAG = "lab01";
 void drawCar(coord_t x, coord_t y)
 {
 	//Body & Cab
-	lcd_fillRect2(BODY_X0, BODY_Y0, BODY_X1, BODY_Y1, CAR_CLR);
-	lcd_fillRect2(CAB_X0, CAB_Y0, CAB_X1, CAB_Y1, CAR_CLR);
+	lcd_fillRect2(x+BODY_X0, y+BODY_Y0, x+BODY_X1, y+BODY_Y1, CAR_CLR);
+	lcd_fillRect2(x+CAB_X0, y+CAB_Y0, x+CAB_X1, y+CAB_Y1, CAR_CLR);
 	//Hood
-	lcd_fillTriangle(HOOD_X0, HOOD_Y0, HOOD_X1, HOOD_Y1, HOOD_X2, HOOD_Y2);
+	lcd_fillTriangle(x+HOOD_X0, y+HOOD_Y0, x+HOOD_X1, y+HOOD_Y1, x+HOOD_X2, y+HOOD_Y2);
 	//Windows
-	lcd_fillRoundRect2(BACK_WINDOW_X0, BACK_WINDOW_Y0, BACK_WINDOW_X1, BACK_WINDOW_Y1, WINDOW_RADIUS, WINDOW_CLR);
-	lcd_fillRoundRect2(FRONT_WINDOW_X0, FRONT_WINDOW_Y0, FRONT_WINDOW_X1, FRONT_WINDOW_Y1, WINDOW_RADIUS, WINDOW_CLR);
+	lcd_fillRoundRect2(x+BACK_WINDOW_X0, y+BACK_WINDOW_Y0, x+BACK_WINDOW_X1, y+BACK_WINDOW_Y1, WINDOW_RADIUS, WINDOW_CLR);
+	lcd_fillRoundRect2(x+FRONT_WINDOW_X0, y+FRONT_WINDOW_Y0, x+FRONT_WINDOW_X1, y+FRONT_WINDOW_Y1, WINDOW_RADIUS, WINDOW_CLR);
 	//Tires
-	lcd_fillCircle(BACK_WHEEL_X, BACK_WHEEL_Y, TIRE_RADIUS, TIRE_CLR);
-	lcd_fillCircle(BACK_WHEEL_X, BACK_WHEEL_Y, HUB_RADIUS, HUB_CLR);
-	lcd_fillCircle(FRONT_WHEEL_X, FRONT_WHEEL_Y, TIRE_RADIUS, TIRE_CLR);
-	lcd_fillCircle(FRONT_WHEEL_X, FRONT_WHEEL_Y, HUB_RADIUS, HUB_CLR);
+	lcd_fillCircle(x+BACK_WHEEL_X, y+BACK_WHEEL_Y, TIRE_RADIUS, TIRE_CLR);
+	lcd_fillCircle(x+BACK_WHEEL_X, y+BACK_WHEEL_Y, HUB_RADIUS, HUB_CLR);
+	lcd_fillCircle(x+FRONT_WHEEL_X, y+FRONT_WHEEL_Y, TIRE_RADIUS, TIRE_CLR);
+	lcd_fillCircle(x+FRONT_WHEEL_X, y+FRONT_WHEEL_Y, HUB_RADIUS, HUB_CLR);
 }
 
 //----------------------------------------------------------------------------//
@@ -127,15 +127,41 @@ void app_main(void)
 	DELAY_MS(WAIT);
 
 	// TODO: Exercise 1 - Draw car in one location.
+	lcd_fillScreen(BACKGROUND_CLR);
+	lcd_drawString(0, 0, "Exercise 1", TITLE_CLR);
+	drawCar(OBJ_X, OBJ_Y);
+	DELAY_MS(WAIT);
 
 	// TODO: Exercise 2 - Draw moving car (Method 1), one pass across display.
 	// Clear the entire display and redraw all objects each iteration.
 	// Use a loop and increment x by OBJ_MOVE each iteration.
 	// Start x off screen (negative coordinate).
+	lcd_fillScreen(BACKGROUND_CLR);
+	lcd_drawString(0, 0, "Exercise 2", TITLE_CLR);
+	for(coord_t x=-CAR_W; x<=LCD_W; x+=OBJ_MOVE) 
+	{
+		lcd_fillScreen(BACKGROUND_CLR);
+		drawCar(x, OBJ_Y);
+		char xstr[3];
+		sprintf(xstr, "%3ld", x);
+		lcd_drawString(0, LCD_H-FONT_H, xstr, STATUS_CLR);
+	}
 
 	// TODO: Exercise 3 - Draw moving car (Method 2), one pass across display.
 	// Move by erasing car at old position, then redrawing at new position.
 	// Objects that don't change or move are drawn once.
+	lcd_fillScreen(BACKGROUND_CLR);
+	lcd_drawString(0, 0, "Exercise 3", TITLE_CLR);
+	for(coord_t x=-CAR_W; x<=LCD_W; x+=OBJ_MOVE) 
+	{
+		lcd_drawRect(x-OBJ_MOVE, OBJ_Y, CAR_W, CAR_H, BACKGROUND_CLR);
+		drawCar(x, OBJ_Y);
+		char xstr[STR_BUF_LEN];
+		sprintf(xstr, "%3ld", x);
+		lcd_drawRect(0, LCD_H-FONT_H, STATUS_W, FONT_H, STATUS_CLR);
+		lcd_drawString(0, LCD_H-FONT_H, xstr, STATUS_CLR);
+	}
+
 
 	// TODO: Exercise 4 - Draw moving car (Method 3), one pass across display.
 	// First, draw all objects into a cleared, off-screen frame buffer.
