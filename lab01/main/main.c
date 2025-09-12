@@ -114,7 +114,10 @@ void drawCar(coord_t x, coord_t y)
 #define OBJ_Y 100
 #define OBJ_MOVE 3 // pixels
 
-
+/**
+ * @brief Draws the x position of a sprite in the bottom left coorner
+ * @param x		Object coordinate to draw
+ */
 void drawObjXPosition(coord_t x) {
 	char xstr[STR_BUF_LEN];
 	sprintf(xstr, "%3ld", x);
@@ -144,6 +147,8 @@ void app_main(void)
 	// Clear the entire display and redraw all objects each iteration.
 	// Use a loop and increment x by OBJ_MOVE each iteration.
 	// Start x off screen (negative coordinate).
+
+	// Move car from left to right side of screen
 	for(coord_t x=-CAR_W; x<=LCD_W; x+=OBJ_MOVE) 
 	{
 		lcd_fillScreen(BACKGROUND_CLR);
@@ -157,6 +162,8 @@ void app_main(void)
 	// Objects that don't change or move are drawn once.
 	lcd_fillScreen(BACKGROUND_CLR);
 	lcd_drawString(0, 0, "Exercise 3", TITLE_CLR);
+
+	// Move car from left to right side of screen
 	for(coord_t x=-CAR_W; x<=LCD_W; x+=OBJ_MOVE) 
 	{
 		lcd_fillRect(x-2*OBJ_MOVE, OBJ_Y, CAR_W, CAR_H, BACKGROUND_CLR);
@@ -170,6 +177,8 @@ void app_main(void)
 	// First, draw all objects into a cleared, off-screen frame buffer.
 	// Then, transfer the entire frame buffer to the screen.
 	lcd_frameEnable();
+
+	// Move car from left to right side of screen
 	for(coord_t x=-CAR_W; x<=LCD_W; x+=OBJ_MOVE) 
 	{
 		lcd_fillScreen(BACKGROUND_CLR);
@@ -183,13 +192,17 @@ void app_main(void)
 	// Use Pac-Man sprites instead of the car object.
 	// Cycle through each sprite when moving the Pac-Man character.
 	const uint8_t pidx[] = {0,1,2,2,1,0};
+
+	// Infinate loop (so embeded program doesn't exit)
 	while(1) 
 	{
 		uint8_t sprite_idx = 0;
+
+		// Move PacMan from left to right side of screen
 		for(coord_t x=-CAR_W; x<=LCD_W; x+=OBJ_MOVE) 
 		{
 			lcd_fillScreen(BACKGROUND_CLR);
-			lcd_drawString(0, 0, "Exercise 4", TITLE_CLR);
+			lcd_drawString(0, 0, "Exercise 5", TITLE_CLR);
 			lcd_drawBitmap(x, OBJ_Y, pac[pidx[(++sprite_idx)%sizeof(pidx)]], PAC_W, PAC_H, YELLOW);
 			drawObjXPosition(x);
 			lcd_writeFrame();
