@@ -51,10 +51,10 @@ static const char *TAG = "lab01";
 
 #define HOOD_X0 40
 #define HOOD_Y0 9
-#define HOOD_X1 39
+#define HOOD_X1 40
 #define HOOD_Y1 11
 #define HOOD_X2 59
-#define HOOD_Y2 24
+#define HOOD_Y2 11
 
 #define BACK_WHEEL_X 11
 #define BACK_WHEEL_Y 24
@@ -115,6 +115,12 @@ void drawCar(coord_t x, coord_t y)
 #define OBJ_MOVE 3 // pixels
 
 
+void drawObjXPosition(coord_t x) {
+	char xstr[STR_BUF_LEN];
+	sprintf(xstr, "%3ld", x);
+	lcd_drawString(0, LCD_H-FONT_H, xstr, STATUS_CLR);
+}
+
 // Application main
 void app_main(void)
 {
@@ -127,7 +133,6 @@ void app_main(void)
 	printf("Hello World! (terminal)\n");
 	DELAY_MS(WAIT);
 
-	while(1) {
 		
 	// TODO: Exercise 1 - Draw car in one location.
 	lcd_fillScreen(BACKGROUND_CLR);
@@ -144,9 +149,7 @@ void app_main(void)
 		lcd_fillScreen(BACKGROUND_CLR);
 		lcd_drawString(0, 0, "Exercise 2", TITLE_CLR);
 		drawCar(x, OBJ_Y);
-		char xstr[STR_BUF_LEN];
-		sprintf(xstr, "%3ld", x);
-		lcd_drawString(0, LCD_H-FONT_H, xstr, STATUS_CLR);
+		drawObjXPosition(x);
 	}
 
 	// TODO: Exercise 3 - Draw moving car (Method 2), one pass across display.
@@ -158,10 +161,8 @@ void app_main(void)
 	{
 		lcd_fillRect(x-2*OBJ_MOVE, OBJ_Y, CAR_W, CAR_H, BACKGROUND_CLR);
 		drawCar(x, OBJ_Y);
-		char xstr[STR_BUF_LEN];
-		sprintf(xstr, "%3ld", x);
 		lcd_fillRect(0, LCD_H-FONT_H, STATUS_W, FONT_H, BACKGROUND_CLR);
-		lcd_drawString(0, LCD_H-FONT_H, xstr, STATUS_CLR);
+		drawObjXPosition(x);
 	}
 
 
@@ -174,15 +175,24 @@ void app_main(void)
 		lcd_fillScreen(BACKGROUND_CLR);
 		lcd_drawString(0, 0, "Exercise 4", TITLE_CLR);
 		drawCar(x, OBJ_Y);
-		char xstr[STR_BUF_LEN];
-		sprintf(xstr, "%3ld", x);
-		lcd_drawString(0, LCD_H-FONT_H, xstr, STATUS_CLR);
+		drawObjXPosition(x);
 		lcd_writeFrame();
 	}
 
 	// TODO: Exercise 5 - Draw an animated Pac-Man moving across the display.
 	// Use Pac-Man sprites instead of the car object.
 	// Cycle through each sprite when moving the Pac-Man character.
-	
+	const uint8_t pidx[] = {0,1,2,2,1,0};
+	while(1) 
+	{
+		uint8_t sprite_idx = 0;
+		for(coord_t x=-CAR_W; x<=LCD_W; x+=OBJ_MOVE) 
+		{
+			lcd_fillScreen(BACKGROUND_CLR);
+			lcd_drawString(0, 0, "Exercise 4", TITLE_CLR);
+			lcd_drawBitmap(x, OBJ_Y, pac[pidx[(++sprite_idx)%sizeof(pidx)]], PAC_W, PAC_H, YELLOW);
+			drawObjXPosition(x);
+			lcd_writeFrame();
+		}
 	}
 }
