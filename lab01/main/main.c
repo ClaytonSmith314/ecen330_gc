@@ -168,14 +168,13 @@ void app_main(void)
 	// TODO: Exercise 4 - Draw moving car (Method 3), one pass across display.
 	// First, draw all objects into a cleared, off-screen frame buffer.
 	// Then, transfer the entire frame buffer to the screen.
-	lcd_fillScreen(BACKGROUND_CLR);
-	lcd_drawString(0, 0, "Exercise 4", TITLE_CLR);
 	lcd_frameEnable();
 	for(coord_t x=-CAR_W; x<=LCD_W; x+=OBJ_MOVE) 
 	{
 		lcd_fillScreen(BACKGROUND_CLR);
+		lcd_drawString(0, 0, "Exercise 4", TITLE_CLR);
 		drawCar(x, OBJ_Y);
-		char xstr[3];
+		char xstr[STR_BUF_LEN];
 		sprintf(xstr, "%3ld", x);
 		lcd_drawString(0, LCD_H-FONT_H, xstr, STATUS_CLR);
 		lcd_writeFrame();
