@@ -81,7 +81,7 @@ void drawCar(coord_t x, coord_t y)
 	lcd_fillRect2(x+BODY_X0, y+BODY_Y0, x+BODY_X1, y+BODY_Y1, CAR_CLR);
 	lcd_fillRect2(x+CAB_X0, y+CAB_Y0, x+CAB_X1, y+CAB_Y1, CAR_CLR);
 	//Hood
-	lcd_fillTriangle(x+HOOD_X0, y+HOOD_Y0, x+HOOD_X1, y+HOOD_Y1, x+HOOD_X2, y+HOOD_Y2);
+	lcd_fillTriangle(x+HOOD_X0, y+HOOD_Y0, x+HOOD_X1, y+HOOD_Y1, x+HOOD_X2, y+HOOD_Y2, CAR_CLR);
 	//Windows
 	lcd_fillRoundRect2(x+BACK_WINDOW_X0, y+BACK_WINDOW_Y0, x+BACK_WINDOW_X1, y+BACK_WINDOW_Y1, WINDOW_RADIUS, WINDOW_CLR);
 	lcd_fillRoundRect2(x+FRONT_WINDOW_X0, y+FRONT_WINDOW_Y0, x+FRONT_WINDOW_X1, y+FRONT_WINDOW_Y1, WINDOW_RADIUS, WINDOW_CLR);
@@ -118,6 +118,7 @@ void drawCar(coord_t x, coord_t y)
 // Application main
 void app_main(void)
 {
+
 	ESP_LOGI(TAG, "Start up");
 	lcd_init();
 	lcd_fillScreen(BACKGROUND_CLR);
@@ -126,6 +127,8 @@ void app_main(void)
 	printf("Hello World! (terminal)\n");
 	DELAY_MS(WAIT);
 
+	while(1) {
+		
 	// TODO: Exercise 1 - Draw car in one location.
 	lcd_fillScreen(BACKGROUND_CLR);
 	lcd_drawString(0, 0, "Exercise 1", TITLE_CLR);
@@ -136,13 +139,12 @@ void app_main(void)
 	// Clear the entire display and redraw all objects each iteration.
 	// Use a loop and increment x by OBJ_MOVE each iteration.
 	// Start x off screen (negative coordinate).
-	lcd_fillScreen(BACKGROUND_CLR);
-	lcd_drawString(0, 0, "Exercise 2", TITLE_CLR);
 	for(coord_t x=-CAR_W; x<=LCD_W; x+=OBJ_MOVE) 
 	{
 		lcd_fillScreen(BACKGROUND_CLR);
+		lcd_drawString(0, 0, "Exercise 2", TITLE_CLR);
 		drawCar(x, OBJ_Y);
-		char xstr[3];
+		char xstr[STR_BUF_LEN];
 		sprintf(xstr, "%3ld", x);
 		lcd_drawString(0, LCD_H-FONT_H, xstr, STATUS_CLR);
 	}
@@ -154,11 +156,11 @@ void app_main(void)
 	lcd_drawString(0, 0, "Exercise 3", TITLE_CLR);
 	for(coord_t x=-CAR_W; x<=LCD_W; x+=OBJ_MOVE) 
 	{
-		lcd_drawRect(x-OBJ_MOVE, OBJ_Y, CAR_W, CAR_H, BACKGROUND_CLR);
+		lcd_fillRect(x-2*OBJ_MOVE, OBJ_Y, CAR_W, CAR_H, BACKGROUND_CLR);
 		drawCar(x, OBJ_Y);
 		char xstr[STR_BUF_LEN];
 		sprintf(xstr, "%3ld", x);
-		lcd_drawRect(0, LCD_H-FONT_H, STATUS_W, FONT_H, STATUS_CLR);
+		lcd_fillRect(0, LCD_H-FONT_H, STATUS_W, FONT_H, BACKGROUND_CLR);
 		lcd_drawString(0, LCD_H-FONT_H, xstr, STATUS_CLR);
 	}
 
@@ -170,4 +172,6 @@ void app_main(void)
 	// TODO: Exercise 5 - Draw an animated Pac-Man moving across the display.
 	// Use Pac-Man sprites instead of the car object.
 	// Cycle through each sprite when moving the Pac-Man character.
+	
+	}
 }
