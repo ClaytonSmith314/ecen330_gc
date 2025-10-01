@@ -25,7 +25,7 @@ volatile uint64_t timer_ticks = 0;
 volatile bool running=false;
 
 // ISR timer callback. Incriments timer_ticks if the stopwatch is running
-static bool timer_callback(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_ctx)
+static bool main_timer_callback(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_ctx)
 {
     int64_t start, finish;
     start = esp_timer_get_time();
@@ -52,9 +52,6 @@ static bool timer_callback(gptimer_handle_t timer, const gptimer_alarm_event_dat
     
     return false;
 }
-
-
-
 
 
 // Main application
@@ -95,7 +92,7 @@ void app_main(void)
     // Set the timer's alarm action
     ESP_ERROR_CHECK(gptimer_set_alarm_action(gptimer, &alarm_config));
     gptimer_event_callbacks_t cbs = {
-        .on_alarm = timer_callback, // Call the user callback function when the alarm event occurs
+        .on_alarm = main_timer_callback, // Call the user callback function when the alarm event occurs
     };
     // Register timer event callback functions, allowing user context to be carried
     ESP_ERROR_CHECK(gptimer_register_event_callbacks(gptimer, &cbs, NULL));
@@ -105,7 +102,6 @@ void app_main(void)
     ESP_ERROR_CHECK(gptimer_start(gptimer));
     finish = esp_timer_get_time();
     printf("Timer config time:%lld microseconds\n", finish-start);
-
 
     start = esp_timer_get_time();
     ESP_LOGI(TAG, "Stopwatch update");
