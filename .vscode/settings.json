@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "cstdint": "c"
+        "cstdint": "c",
+        "chrono": "c",
+        "random": "c",
+        "limits": "c"
     }
 }
