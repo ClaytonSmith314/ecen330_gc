@@ -4,5 +4,6 @@
         "chrono": "c",
         "random": "c",
         "limits": "c"
-    }
+    },
+    "cmake.ignoreCMakeListsMissing": true
 }
