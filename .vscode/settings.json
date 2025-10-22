@@ -3,7 +3,8 @@
         "cstdint": "c",
         "chrono": "c",
         "random": "c",
-        "limits": "c"
+        "limits": "c",
+        "graphics.h": "c"
     },
     "cmake.ignoreCMakeListsMissing": true
 }
