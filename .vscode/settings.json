@@ -6,5 +6,6 @@
         "limits": "c",
         "graphics.h": "c"
     },
-    "cmake.ignoreCMakeListsMissing": true
+    "cmake.ignoreCMakeListsMissing": true,
+    "C_Cpp.errorSquiggles": "disabled"
 }
