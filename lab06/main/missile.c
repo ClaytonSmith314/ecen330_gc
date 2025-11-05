@@ -44,20 +44,24 @@ void missile_init(missile_t *missile) {
 	missile->launch = false;
 }
 
+// set the player x origin to the nearest launch pad
 coord_t select_plr_x_origin(coord_t x_dest) {
 	uint32_t bucket = x_dest*X_MISSILE_BUCKETS / LCD_W; //bucket between 0 and 2 inclusive
 	coord_t x_origin = (bucket*LCD_W+LCD_W/2)/X_MISSILE_BUCKETS; //split screen into buckets & select midpoint of bucket
 	return x_origin;
 }
 
+// randomly set the target for enemy missiles
 coord_t missile_select_enemy_x() {
 	return rand()%LCD_W;
 }
 
+// randomly set the altidue origin for enemy missiles
 coord_t missile_select_enemy_y_origin() {
 	return rand()%ENEMY_LOWEST_START_ALTITUDE;
 }
 
+// setup things on missiles that is done for all missiles
 void missile_complete_setup(missile_t *missile) {
 	missile->currentState = MISSILE_ST_MOVING;
 	missile->x_current = missile->x_origin;
@@ -68,6 +72,7 @@ void missile_complete_setup(missile_t *missile) {
 	missile->explode_me = false;
 }
 
+// get the color of a missile given the type
 color_t missile_get_color(missile_type_t type) {
 	switch(type) {
 		case MISSILE_TYPE_PLAYER: return CONFIG_COLOR_PLAYER_MISSILE;
@@ -126,10 +131,15 @@ void missile_explode(missile_t *missile) {
 
 // Tick the state machine for a single missile.
 void missile_tick(missile_t *missile) {
+	// state switch + mealy actions
 	switch(missile->currentState) {
 		case MISSILE_ST_IDLE: break;
 		case MISSILE_ST_MOVING: {
-			if(missile->length > missile->total_length){
+			// if exploding, start exploding
+			if(missile->explode_me) {
+				missile->currentState = MISSILE_ST_GROW;
+				missile->explode_me = false;
+			} else if(missile->length > missile->total_length){
 				if(missile->type==MISSILE_TYPE_PLAYER) {
 					missile->currentState = MISSILE_ST_GROW;
 				} else {
@@ -151,11 +161,12 @@ void missile_tick(missile_t *missile) {
 			missile->currentState = MISSILE_ST_IDLE;
 		} break;
 	}
-
+	//moore actions
 	switch(missile->currentState) {
 		case MISSILE_ST_IDLE: break;
 		case MISSILE_ST_MOVING: {
 			uint32_t dist_move;
+			// set the speed based on the type
 			switch(missile->type) {
 				case MISSILE_TYPE_PLAYER: {
 					dist_move = CONFIG_PLAYER_MISSILE_DISTANCE_PER_TICK;

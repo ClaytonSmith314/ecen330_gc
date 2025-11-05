@@ -47,6 +47,7 @@ void plane_explode(void) {
 
 // State machine tick function.
 void plane_tick(void) {
+    // state switch + mealy actions
     switch(plane_state) {
         case PLANE_ST_IDLE: {
             if(plane_idle_ticks >= CONFIG_PLANE_IDLE_TIME_TICKS) {
@@ -56,18 +57,20 @@ void plane_tick(void) {
             }
         } break;
         case PLANE_ST_FLYING: {
-            if(plane_x_pos <= -CONFIG_PLANE_WIDTH/2) {
+            if(explode_me || plane_x_pos <= -CONFIG_PLANE_WIDTH/2) {
                 plane_state = PLANE_ST_IDLE;
                 plane_idle_ticks = 0;
+                explode_me = false;
             }
 
         } break;
     }
-
+    // actions
     switch(plane_state) {
         case PLANE_ST_IDLE: {
             plane_idle_ticks++;
         } break;
+        // draw and move plane
         case PLANE_ST_FLYING: {
             lcd_fillTriangle(
                 plane_x_pos-CONFIG_PLANE_WIDTH/2, PLANE_ALTITUDE,

@@ -4,7 +4,8 @@
         "chrono": "c",
         "random": "c",
         "limits": "c",
-        "graphics.h": "c"
+        "graphics.h": "c",
+        "game.h": "c"
     },
     "cmake.ignoreCMakeListsMissing": true,
     "C_Cpp.errorSquiggles": "disabled"
